@@ -1,0 +1,3 @@
+<apex:page showHeader="false">
+    <apex:image id="theImage" value="{!IMAGEPROXYURL('https://developer.salesforce.com/files/salesforce-developer-network-logo.png')}" alt="Description of image here"/>
+</apex:page>
