@@ -1,5 +1,5 @@
 trigger UpdateContactAdress on Account (after update) {
-   	
+    
    //Set<Id> accIds = new Set<Id>();
     //for (account acc : Trigger.new){
       //  Account old = Trigger.oldMap.get(acc.Id);
@@ -13,7 +13,7 @@ trigger UpdateContactAdress on Account (after update) {
   //          updates.put(con.Id, new Contact(
    //             Id = con.Id,
    //             MailingStreet = acc.BillingStreet
-					
+                    
       //          ));
             
             
