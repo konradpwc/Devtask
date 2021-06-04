@@ -4,7 +4,7 @@ trigger CSP_OpportunityTrigger on Opportunity (after update) {
 
     if(Trigger.isUpdate){
 
-        handler.afterUpdate(trigger.new, trigger.oldMap);
+        handler.createNewCars(trigger.new, trigger.oldMap);
     }
 
 
