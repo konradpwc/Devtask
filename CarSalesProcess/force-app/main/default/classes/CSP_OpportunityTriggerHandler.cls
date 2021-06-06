@@ -132,13 +132,9 @@ public with sharing class CSP_OpportunityTriggerHandler {
         Decimal oldQuantity = oldOliMap.get(nOli.Id).Quantity;
         for (Opportunity opp : oppList) {
           if (
-            oldQuantity != nOli.Quantity &&
-            (nOli.UnitPrice * nOli.Quantity) + beforeTotPrice >
-            opp.Account.Budget__c
-          ) {
+            oldQuantity != nOli.Quantity &&(nOli.UnitPrice * nOli.Quantity) + beforeTotPrice >opp.Account.Budget__c) {
             nOli.addError('Not enough budget');
           }
-
           update opp;
         }
       }
