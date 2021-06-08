@@ -1,16 +1,12 @@
-trigger CSP_OpportunnityLineItemTrigger on OpportunityLineItem(before insert,before update) {
+trigger CSP_OpportunnityLineItemTrigger on OpportunityLineItem(before insert,after insert, before update) {
 
-CSP_OpportunityTriggerHandler handler = new CSP_OpportunityTriggerHandler();
+  CSP_OpportunityTriggerHandler handler = new CSP_OpportunityTriggerHandler();
 
-if(Trigger.isInsert){
-   
-  handler.checkAccountBudgetBeforeInsert(trigger.new);
-}
-
-if(Trigger.isUpdate){
-    handler.checkAccountBudgetBeforeUpdate(trigger.new, trigger.oldMap);
-
-}
-
+  if (Trigger.isAfter && Trigger.isInsert) {
+    handler.checkAccountBudgetBeforeInsert(Trigger.new);
+    } 
+  else if (Trigger.isUpdate) {
+    handler.checkAccountBudgetBeforeUpdate(Trigger.new, Trigger.oldMap);
+  }
 
 }

@@ -1,7 +1,7 @@
 global class CSP_CreateNewCases implements Database.Batchable<sObject> {
   global Database.QueryLocator start(Database.BatchableContext bc) {
     return Database.getQueryLocator(
-      'SELECT ID,CreatedDate,Account__c FROM CSP_Car__c WHERE CreatedDate  = LAST_N_YEARS:2 AND CreatedDate = LAST_N_YEARS:1');
+      'SELECT ID,CreatedDate,Account__c FROM CSP_Car__c WHERE CreatedDate  = TODAY');
   }
 
   global void execute(Database.BatchableContext bc, List<CSP_Car__c> cars) {
@@ -10,20 +10,25 @@ global class CSP_CreateNewCases implements Database.Batchable<sObject> {
       carsids.add(c.Id);
     }
 
-    Map<Id, CSP_Car__c> carmap = new Map<Id, CSP_Car__c>([SELECT ID, Account__c, Opportunity__r.OwnerId
+    Map<Id, CSP_Car__c> carmap = new Map<Id, CSP_Car__c>([SELECT ID,Name, Account__c, Opportunity__r.OwnerId
                                                           FROM CSP_Car__C
                                                           WHERE ID IN :carsids]);
 
     List<Case> newCase = new List<Case>();
 
+    Id caseRecordTypeId = Schema.SObjectType.Case.getRecordTypeInfosByDeveloperName()
+                      .get('Car_Sales').getRecordTypeId();
+
     for (CSP_Car__c c : carmap.values()) {
       Case cas = new Case();
 
-      Cas.Car__c = c.id;
+
+      cas.Car__c = c.id;
       cas.Origin = 'Apex Schedlue';
-      //cas.RecordType.DeveloperName = 'Car_Sales';
+      cas.RecordTypeId = caseRecordTypeId;
       cas.AccountId = c.Account__c;
       cas.OwnerId = c.Opportunity__r.OwnerId;
+      cas.Subject = 'Service review for ' + c.Name;
 
       newCase.add(cas);
     }

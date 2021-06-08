@@ -78,12 +78,15 @@ public with sharing class CSP_OpportunityTriggerHandler {
 
   public void checkAccountBudgetBeforeInsert(List<OpportunityLineItem> oppliList) {
     Set<ID> oppIds = new Set<ID>();
+    set<Id> oliId = new Set<ID>();
     for (OpportunityLineItem oli : oppliList) {
       oppIds.add(oli.OpportunityId);
+      oliId.add(oli.Id);
 
-      List<OpportunityLineItem> oliTotalPrice = [SELECT OpportunityID, TotalPrice, Opportunity.Account.Budget__c
+      List<OpportunityLineItem> oliTotalPrice = [SELECT ID, OpportunityID, TotalPrice, Opportunity.Account.Budget__c
                                                  FROM OpportunityLineItem
-                                                 WHERE OpportunityId IN :oppIds ];
+                                                 WHERE OpportunityId IN :oppIds
+                                                 AND ID NOT IN :oliId ];
 
       decimal beforeTotPrice = 0;
 
@@ -97,14 +100,19 @@ public with sharing class CSP_OpportunityTriggerHandler {
 
       for (OpportunityLineItem nOli : oppliList) {
         for (Opportunity opp : oppList) {
-          if ((nOli.UnitPrice * nOli.Quantity) + beforeTotPrice >opp.Account.Budget__c) {
+          if ((nOli.UnitPrice * nOli.Quantity)+beforeTotPrice >opp.Account.Budget__c) {
             nOli.addError('Not enough budget');
           }
 
-          update opp;
+          
         }
+        system.debug('price' +beforeTotPrice);
       }
     }
+
+
+
+
   }
 
   public void checkAccountBudgetBeforeUpdate(List<OpportunityLineItem> oppliList,Map<Id, OpportunityLineItem> oldOliMap) {
