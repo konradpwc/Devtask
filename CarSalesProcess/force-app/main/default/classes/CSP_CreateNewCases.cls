@@ -24,7 +24,7 @@ global class CSP_CreateNewCases implements Database.Batchable<sObject> {
 
 
       cas.Car__c = c.id;
-      cas.Origin = 'Apex Schedlue';
+      cas.Origin = 'Apex Schedule';
       cas.RecordTypeId = caseRecordTypeId;
       cas.AccountId = c.Account__c;
       cas.OwnerId = c.Opportunity__r.OwnerId;
@@ -41,8 +41,10 @@ global class CSP_CreateNewCases implements Database.Batchable<sObject> {
       t.WhatId = ca.Id;
       t.Status = 'Not Started';
       t.Priority = 'Normal';
-      t.Subject = 'Other';
+      t.Subject = 'Car service';
       t.Type = 'Email';
+      t.ActivityDate  =date.today()+7;
+      t.Description =('Car service for' + ca.Car__c + ',for client'+ ca.Accountid);
 
       newTask.add(t);
     }
